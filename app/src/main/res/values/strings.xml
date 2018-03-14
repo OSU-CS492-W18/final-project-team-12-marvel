@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MarvelSearch</string>
+
+    <string name="loading_error_message">Error loading data!</string>
 </resources>
