@@ -11,4 +11,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="attribution_info">Data provided by Marvel. © 2014 Marvel</string>
 </resources>
