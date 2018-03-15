@@ -15,4 +15,6 @@
     <string name="action_share">Share</string>
     <string name="share_text_prefix">Share This</string>
     <string name="share_chooser_title">ShareChooserTitle</string>
+    <string name="attribution_info">Data provided by Marvel. © 2014 Marvel</string>
+
 </resources>

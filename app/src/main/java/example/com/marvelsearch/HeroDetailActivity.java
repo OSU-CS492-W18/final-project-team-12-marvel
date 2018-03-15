@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SearchResultDetailActivity extends AppCompatActivity {
+public class HeroDetailActivity extends AppCompatActivity {
 
     private TextView mTVSearchResultName;
     private TextView mTVSearchResultStars;

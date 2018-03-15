@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
 
     @Override
     public void onSearchItemClick(MarvelUtils.SearchResult searchResult) {
-        Intent detailedSearchResultIntent = new Intent(this, SearchResultDetailActivity.class);
+        Intent detailedSearchResultIntent = new Intent(this, HeroDetailActivity.class);
         detailedSearchResultIntent.putExtra(MarvelUtils.EXTRA_SEARCH_RESULT, searchResult);
         startActivity(detailedSearchResultIntent);
     }

@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SavedSearchResultsActivity" />
-        <activity android:name=".SearchResultDetailActivity"></activity>
+        <activity android:name=".HeroDetailActivity"></activity>
     </application>
 
 </manifest>
