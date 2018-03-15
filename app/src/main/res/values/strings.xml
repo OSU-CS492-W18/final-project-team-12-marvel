@@ -2,4 +2,13 @@
     <string name="app_name">MarvelSearch</string>
 
     <string name="loading_error_message">Error loading data!</string>
+
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
+    <string name="title_activity_saved_search_results">Saved Searches</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
