@@ -2,5 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/nav_search" android:title="Search" />
 
-    <item android:id="@+id/nav_saved_search_results" android:title="Recently Searches" />
+    <item android:id="@+id/nav_saved_search_results" android:title="Recently Searched" />
 </menu>
