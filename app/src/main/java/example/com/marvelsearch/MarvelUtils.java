@@ -28,7 +28,7 @@ public class MarvelUtils {
     public static class SearchResult implements Serializable {
         public String name;
         public String description;
-        //public Image thumbnail;
+        public String imageURL;
     }
 
     public static String buildMarvelSearchURL(String character_name) {
@@ -50,7 +50,7 @@ public class MarvelUtils {
     public static ArrayList<SearchResult> parseSearchResultsJSON(String searchResultsJSON) {
         try {
             JSONObject searchResultsObj = new JSONObject(searchResultsJSON);
-            JSONArray searchResultsItems = searchResultsObj.getJSONArray("results");
+            JSONArray searchResultsItems = searchResultsObj.getJSONObject("data").getJSONArray("results");
 
             ArrayList<SearchResult> searchResultsList = new ArrayList<SearchResult>();
             for (int i = 0; i < searchResultsItems.length(); i++) {
@@ -58,6 +58,9 @@ public class MarvelUtils {
                 JSONObject resultItem = searchResultsItems.getJSONObject(i);
                 result.name = resultItem.getString("name");
                 result.description = resultItem.getString("description");
+                JSONObject thumbnail = resultItem.getJSONObject("thumbnail");
+                result.imageURL = thumbnail.getString("path");
+                result.imageURL = result.imageURL + "/portrait_small." + thumbnail.getString("extension");
                 searchResultsList.add(result);
             }
             return searchResultsList;
