@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -152,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
                 mDrawerLayout.closeDrawers();
                 return true;
             default:
+                mDrawerLayout.closeDrawers();
+                mSearchBoxET.setText("");
                 return false;
         }
     }
@@ -166,6 +169,8 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
     @Override
     public void onSavedSearchItemClick(String query) {
         doMarvelSearch(query);
+        mDrawerLayout.closeDrawers();
+        mSearchBoxET.setText("");
     }
 
     @Override
