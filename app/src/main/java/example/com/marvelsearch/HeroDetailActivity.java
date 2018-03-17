@@ -18,10 +18,6 @@ public class HeroDetailActivity extends AppCompatActivity {
     private TextView mTVSearchResultName;
     private TextView mTVSearchResultStars;
     private TextView mTVSearchResultDescription;
-    private ImageView mIVSearchResultBookmark;
-    private boolean mIsBookmarked = false;
-
-    private SQLiteDatabase mDB;
 
     private MarvelUtils.SearchResult mSearchResult;
 
@@ -32,7 +28,6 @@ public class HeroDetailActivity extends AppCompatActivity {
         mTVSearchResultName = findViewById(R.id.tv_search_result_name);
         mTVSearchResultStars = findViewById(R.id.tv_search_result_stars);
         mTVSearchResultDescription = findViewById(R.id.tv_search_result_description);
-        mIVSearchResultBookmark = findViewById(R.id.iv_search_result_bookmark);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(MarvelUtils.EXTRA_SEARCH_RESULT)) {
@@ -42,21 +37,6 @@ public class HeroDetailActivity extends AppCompatActivity {
             mTVSearchResultDescription.setText(mSearchResult.description);
         }
 
-        /*MarvelUtils dbHelper = new GitHubSearchDBHelper(this);
-        mDB = dbHelper.getWritableDatabase();*/
-
-        mIVSearchResultBookmark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mIsBookmarked = !mIsBookmarked;
-                if (mIsBookmarked) {
-                    //addSearchResultToDB();
-                    mIVSearchResultBookmark.setImageResource(R.drawable.ic_bookmark_black);
-                } else {
-                    mIVSearchResultBookmark.setImageResource(R.drawable.ic_bookmark_border_black);
-                }
-            }
-        });
     }
 
     @Override
@@ -89,16 +69,4 @@ public class HeroDetailActivity extends AppCompatActivity {
         }
     }
 
-    /*private long addSearchResultToDB() {
-        if (mSearchResult != null) {
-            ContentValues row = new ContentValues();
-            row.put(GitHubSearchContract.SavedRepos.COLUMN_FULL_NAME, mSearchResult.fullName);
-            row.put(GitHubSearchContract.SavedRepos.COLUMN_DESCRIPTION, mSearchResult.description);
-            row.put(GitHubSearchContract.SavedRepos.COLUMN_URL, mSearchResult.htmlURL);
-            row.put(GitHubSearchContract.SavedRepos.COLUMN_STARS, mSearchResult.stars);
-            return mDB.insert(GitHubSearchContract.SavedRepos.TABLE_NAME, null, row);
-        } else {
-            return -1;
-        }
-    }*/
 }

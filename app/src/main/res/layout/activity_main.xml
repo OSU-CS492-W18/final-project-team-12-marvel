@@ -63,6 +63,21 @@
         android:layout_width="wrap_content"
         android:layout_gravity="start"
         android:background="#fff"
-        app:menu="@menu/navigation_drawer"/>
+        app:menu="@menu/navigation_drawer">
+        <TextView
+            android:id="@+id/tv_saved_searches"
+            android:layout_marginTop="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Saved Searches"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_saved_searches"
+            android:layout_marginTop="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

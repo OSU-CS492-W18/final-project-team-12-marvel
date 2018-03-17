@@ -1,7 +1,10 @@
 package example.com.marvelsearch;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -25,7 +28,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MarvelSearchAdapter.OnSearchItemClickListener, LoaderManager.LoaderCallbacks<String>,
-        NavigationView.OnNavigationItemSelectedListener{
+        NavigationView.OnNavigationItemSelectedListener, SavedSearchAdapter.OnSavedSearchItemClickListener {
 
     private final static String SEARCH_URL_KEY = "marvelSearchURL";
 
@@ -38,6 +41,11 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
     private EditText mSearchBoxET;
     private ProgressBar mLoadingProgressBar;
     private TextView mLoadingErrorMessage;
+
+    private SQLiteDatabase mDB;
+
+    private RecyclerView mSavedSearchesRV;
+    private SavedSearchAdapter mSavedSearchAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +74,19 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
         NavigationView navigationView = findViewById(R.id.nv_navigation_drawer);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Button searchButton = (Button)findViewById(R.id.btn_search);
+        MarvelSearchDBHelper dbHelper = new MarvelSearchDBHelper(this);
+        mDB = dbHelper.getWritableDatabase();
+
+        mSavedSearchesRV = findViewById(R.id.rv_saved_searches);
+
+        mSavedSearchAdapter = new SavedSearchAdapter(this, this);
+        mSavedSearchesRV.setAdapter(mSavedSearchAdapter);
+        mSavedSearchesRV.setLayoutManager(new LinearLayoutManager(this));
+        mSavedSearchesRV.setHasFixedSize(true);
+
+        mSavedSearchAdapter.updateSearchItems(getSearches());
+
+        Button searchButton = findViewById(R.id.btn_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +98,12 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
         });
 
         getSupportLoaderManager().initLoader(MARVEL_SEARCH_LOADER_ID, null, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mDB.close();
+        super.onDestroy();
     }
 
     @Override
@@ -101,33 +127,15 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
     }
 
     private void doMarvelSearch(String searchQuery) {
-        /*SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (searchQuery != null) {
+            if(!checkIfExists(searchQuery)) {
+                ContentValues row = new ContentValues();
+                row.put(MarvelSearchContract.SavedSearches.COLUMN_SEARCH_TERM, searchQuery);
+                mDB.insert(MarvelSearchContract.SavedSearches.TABLE_NAME, null, row);
+            }
 
-        String sort = sharedPreferences.getString(
-                getString(R.string.pref_sort_key),
-                getString(R.string.pref_sort_default)
-        );
-
-        String language = sharedPreferences.getString(
-                getString(R.string.pref_language_key),
-                getString(R.string.pref_language_default)
-        );
-
-        String user = sharedPreferences.getString(
-                getString(R.string.pref_user_key), ""
-        );
-
-        boolean searchInName = sharedPreferences.getBoolean(
-                getString(R.string.pref_in_name_key), true
-        );
-
-        boolean searchInDescription = sharedPreferences.getBoolean(
-                getString(R.string.pref_in_description_key), true
-        );
-
-        boolean searchInReadme = sharedPreferences.getBoolean(
-                getString(R.string.pref_in_readme_key), true
-        );*/
+            mSavedSearchAdapter.updateSearchItems(getSearches());
+        }
 
         Log.d("MA - doMarvelSearch", "Searching with API");
         String marvelSearchURL = MarvelUtils.buildMarvelSearchURL(searchQuery, null, null,
@@ -144,16 +152,6 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
             case R.id.nav_search:
                 mDrawerLayout.closeDrawers();
                 return true;
-            case R.id.nav_saved_search_results:
-                mDrawerLayout.closeDrawers();
-                Intent savedResultsIntent = new Intent(this, SavedSearchResultsActivity.class);
-                startActivity(savedResultsIntent);
-                return true;
-            //case R.id.nav_settings:
-            //    mDrawerLayout.closeDrawers();
-            //    Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            //    startActivity(settingsIntent);
-            //    return true;
             default:
                 return false;
         }
@@ -164,6 +162,11 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
         Intent detailedSearchResultIntent = new Intent(this, HeroDetailActivity.class);
         detailedSearchResultIntent.putExtra(MarvelUtils.EXTRA_SEARCH_RESULT, searchResult);
         startActivity(detailedSearchResultIntent);
+    }
+
+    @Override
+    public void onSavedSearchItemClick(String query) {
+        doMarvelSearch(query);
     }
 
     @Override
@@ -193,5 +196,44 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
     @Override
     public void onLoaderReset(Loader<String> loader) {
         // Nothing to do...
+    }
+
+    private boolean checkIfExists(String location) {
+        boolean exists = false;
+
+        String sqlSelection = MarvelSearchContract.SavedSearches.COLUMN_SEARCH_TERM + " = ?";
+        String[] sqlSelectionArgs = { location };
+        Cursor cursor = mDB.query(
+                MarvelSearchContract.SavedSearches.TABLE_NAME,
+                null,
+                sqlSelection,
+                sqlSelectionArgs,
+                null,
+                null,
+                null
+        );
+        exists = cursor.getCount() > 0;
+        cursor.close();
+
+        return exists;
+    }
+
+    private ArrayList<String> getSearches() {
+        ArrayList<String> locations = new ArrayList<String>();
+
+        String sqlTable = MarvelSearchContract.SavedSearches.TABLE_NAME;
+        String sqlSelection = MarvelSearchContract.SavedSearches.COLUMN_SEARCH_TERM;
+        Cursor cursor = mDB.rawQuery("SELECT " + sqlSelection + " FROM " + sqlTable + ";",
+                null
+        );
+
+        int columnIndex=cursor.getColumnIndex(MarvelSearchContract.SavedSearches.COLUMN_SEARCH_TERM);
+        while(cursor.moveToNext()) {
+            locations.add(cursor.getString(columnIndex));
+        }
+
+        cursor.close();
+
+        return locations;
     }
 }

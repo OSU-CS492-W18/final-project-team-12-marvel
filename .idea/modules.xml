@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
-      <module fileurl="file://C:\Users\Owner\Documents\CS492\final-project-team-12-marvel\app\app.iml" filepath="C:\Users\Owner\Documents\CS492\final-project-team-12-marvel\app\app.iml" />
-      <module fileurl="file://C:\Users\Andrew\Documents\GitHub\final-project-team-12-marvel\app\app.iml" filepath="C:\Users\Andrew\Documents\GitHub\final-project-team-12-marvel\app\app.iml" />
-=======
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
->>>>>>> 1ab5dd829deaf3b8e3bb9e808f6bbad6bae9b5fa
       <module fileurl="file://$PROJECT_DIR$/final-project-team-12-marvel.iml" filepath="$PROJECT_DIR$/final-project-team-12-marvel.iml" />
     </modules>
   </component>

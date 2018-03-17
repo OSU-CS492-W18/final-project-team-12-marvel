@@ -17,7 +17,7 @@ public class MarvelUtils {
     final static String MARVEL_SEARCH_QUERY_PARAM = "q";
     final static String MARVEL_SEARCH_SORT_PARAM = "sort";
 
-    final static String API_KEY = "19623756cd9941dd74babe40e02d8d1f0a44a496"
+    final static String API_KEY = "19623756cd9941dd74babe40e02d8d1f0a44a496";
 
     public static class SearchResult implements Serializable {
         public String fullName;
