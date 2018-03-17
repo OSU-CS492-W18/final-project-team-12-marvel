@@ -101,37 +101,8 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
     }
 
     private void doMarvelSearch(String searchQuery) {
-        /*SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        String sort = sharedPreferences.getString(
-                getString(R.string.pref_sort_key),
-                getString(R.string.pref_sort_default)
-        );
-
-        String language = sharedPreferences.getString(
-                getString(R.string.pref_language_key),
-                getString(R.string.pref_language_default)
-        );
-
-        String user = sharedPreferences.getString(
-                getString(R.string.pref_user_key), ""
-        );
-
-        boolean searchInName = sharedPreferences.getBoolean(
-                getString(R.string.pref_in_name_key), true
-        );
-
-        boolean searchInDescription = sharedPreferences.getBoolean(
-                getString(R.string.pref_in_description_key), true
-        );
-
-        boolean searchInReadme = sharedPreferences.getBoolean(
-                getString(R.string.pref_in_readme_key), true
-        );*/
-
         Log.d("MA - doMarvelSearch", "Searching with API");
-        String marvelSearchURL = MarvelUtils.buildMarvelSearchURL(searchQuery, null, null,
-                null, true, false, false);
+        String marvelSearchURL = MarvelUtils.buildMarvelSearchURL(searchQuery);
         Bundle args = new Bundle();
         args.putString(SEARCH_URL_KEY, marvelSearchURL);
         mLoadingProgressBar.setVisibility(View.VISIBLE);

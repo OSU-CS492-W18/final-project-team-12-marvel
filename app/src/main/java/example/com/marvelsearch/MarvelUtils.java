@@ -2,7 +2,10 @@ package example.com.marvelsearch;
 
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,69 +16,48 @@ import java.util.ArrayList;
 public class MarvelUtils {
     public static final String EXTRA_SEARCH_RESULT = "MarvelUtils.SearchResult";
 
-    final static String MARVEL_SEARCH_BASE_URL = "https://api.github.com/search/repositories";
-    final static String MARVEL_SEARCH_QUERY_PARAM = "q";
-    final static String MARVEL_SEARCH_SORT_PARAM = "sort";
+    final static String MARVEL_SEARCH_BASE_URL = "https://gateway.marvel.com:443/v1/public/characters";
+    final static String MARVEL_SEARCH_CHAR_PARAM = "name";
+    final static String MARVEL_SEARCH_API_PARAM = "apikey";
+    final static String MARVEL_SEARCH_HASH_PARAM = "hash";
+    final static String MARVEL_SEARCH_TS_PARAM = "ts";
 
-    final static String API_KEY = "19623756cd9941dd74babe40e02d8d1f0a44a496"
+    final static String PUBLIC_API_KEY = "4c5f3e062d637c9e37a168fb4dc5b5d3";
+    final static String PRIVATE_API_KEY = "19623756cd9941dd74babe40e02d8d1f0a44a496";
 
     public static class SearchResult implements Serializable {
-        public String fullName;
+        public String name;
         public String description;
-        public String htmlURL;
-        public int stars;
+        //public Image thumbnail;
     }
 
-    public static String buildMarvelSearchURL(String searchQuery, String sort, String language,
-                                              String user, boolean searchInName, boolean searchInDescription,
-                                              boolean searchInReadme) {
+    public static String buildMarvelSearchURL(String character_name) {
+        long ts = System.currentTimeMillis();
+        String hashString = ts + PRIVATE_API_KEY + PUBLIC_API_KEY;
+        String hash = new String(Hex.encodeHex(DigestUtils.md5(hashString)));
 
         Uri.Builder builder = Uri.parse(MARVEL_SEARCH_BASE_URL).buildUpon();
 
-        if (!TextUtils.isEmpty(sort)) {
-            builder.appendQueryParameter(MARVEL_SEARCH_SORT_PARAM, sort);
-        }
+        builder.appendQueryParameter(MARVEL_SEARCH_CHAR_PARAM, character_name);
+        builder.appendQueryParameter(MARVEL_SEARCH_TS_PARAM, String.valueOf(ts));
+        builder.appendQueryParameter(MARVEL_SEARCH_API_PARAM, PUBLIC_API_KEY);
+        builder.appendQueryParameter(MARVEL_SEARCH_HASH_PARAM, hash);
 
-        String queryValue = new String(searchQuery);
-        if (!TextUtils.isEmpty(language)) {
-            queryValue += " language:" + language;
-        }
-        if (!TextUtils.isEmpty(user)) {
-            queryValue += " user:" + user;
-        }
-
-        ArrayList<String> searchInList = new ArrayList<>();
-        if (searchInName) {
-            searchInList.add("name");
-        }
-        if (searchInDescription) {
-            searchInList.add("description");
-        }
-        if (searchInReadme) {
-            searchInList.add("readme");
-        }
-        if (!searchInList.isEmpty()) {
-            queryValue += " in:" + TextUtils.join(",", searchInList);
-        }
-
-        builder.appendQueryParameter(MARVEL_SEARCH_QUERY_PARAM, queryValue);
-
+        Log.d("MU - buildMarvelSearchU", builder.build().toString());
         return builder.build().toString();
     }
 
     public static ArrayList<SearchResult> parseSearchResultsJSON(String searchResultsJSON) {
         try {
             JSONObject searchResultsObj = new JSONObject(searchResultsJSON);
-            JSONArray searchResultsItems = searchResultsObj.getJSONArray("items");
+            JSONArray searchResultsItems = searchResultsObj.getJSONArray("results");
 
             ArrayList<SearchResult> searchResultsList = new ArrayList<SearchResult>();
             for (int i = 0; i < searchResultsItems.length(); i++) {
                 SearchResult result = new SearchResult();
                 JSONObject resultItem = searchResultsItems.getJSONObject(i);
-                result.fullName = resultItem.getString("full_name");
+                result.name = resultItem.getString("name");
                 result.description = resultItem.getString("description");
-                result.htmlURL = resultItem.getString("html_url");
-                result.stars = resultItem.getInt("stargazers_count");
                 searchResultsList.add(result);
             }
             return searchResultsList;

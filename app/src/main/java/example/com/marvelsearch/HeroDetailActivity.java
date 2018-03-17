@@ -16,7 +16,6 @@ import android.widget.TextView;
 public class HeroDetailActivity extends AppCompatActivity {
 
     private TextView mTVSearchResultName;
-    private TextView mTVSearchResultStars;
     private TextView mTVSearchResultDescription;
     private ImageView mIVSearchResultBookmark;
     private boolean mIsBookmarked = false;
@@ -30,15 +29,13 @@ public class HeroDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_result_detail);
 
         mTVSearchResultName = findViewById(R.id.tv_search_result_name);
-        mTVSearchResultStars = findViewById(R.id.tv_search_result_stars);
         mTVSearchResultDescription = findViewById(R.id.tv_search_result_description);
         mIVSearchResultBookmark = findViewById(R.id.iv_search_result_bookmark);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(MarvelUtils.EXTRA_SEARCH_RESULT)) {
             mSearchResult = (MarvelUtils.SearchResult) intent.getSerializableExtra(MarvelUtils.EXTRA_SEARCH_RESULT);
-            mTVSearchResultName.setText(mSearchResult.fullName);
-            mTVSearchResultStars.setText(String.valueOf(mSearchResult.stars));
+            mTVSearchResultName.setText(mSearchResult.name);
             mTVSearchResultDescription.setText(mSearchResult.description);
         }
 
@@ -79,7 +76,7 @@ public class HeroDetailActivity extends AppCompatActivity {
     public void shareRepo() {
         if (mSearchResult != null) {
             String shareText = getString(R.string.share_text_prefix) + ": " +
-                    mSearchResult.fullName + ", " + mSearchResult.htmlURL;
+                    mSearchResult.name + ", " + mSearchResult.description;
 
             ShareCompat.IntentBuilder.from(this)
                     .setChooserTitle(R.string.share_chooser_title)
