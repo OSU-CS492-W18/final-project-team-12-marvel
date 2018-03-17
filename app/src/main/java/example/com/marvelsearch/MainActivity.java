@@ -138,8 +138,7 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
         }
 
         Log.d("MA - doMarvelSearch", "Searching with API");
-        String marvelSearchURL = MarvelUtils.buildMarvelSearchURL(searchQuery, null, null,
-                null, true, false, false);
+        String marvelSearchURL = MarvelUtils.buildMarvelSearchURL(searchQuery);
         Bundle args = new Bundle();
         args.putString(SEARCH_URL_KEY, marvelSearchURL);
         mLoadingProgressBar.setVisibility(View.VISIBLE);

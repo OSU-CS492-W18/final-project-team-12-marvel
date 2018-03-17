@@ -69,7 +69,7 @@ public class MarvelSearchAdapter extends RecyclerView.Adapter<MarvelSearchAdapte
         }
 
         public void bind(MarvelUtils.SearchResult searchResult) {
-            mSearchResultTV.setText(searchResult.fullName);
+            mSearchResultTV.setText(searchResult.name);
         }
     }
 }
