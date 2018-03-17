@@ -13,12 +13,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 public class HeroDetailActivity extends AppCompatActivity {
 
     private TextView mTVSearchResultName;
     private TextView mTVSearchResultDescription;
-    private ImageView mIVSearchResultBookmark;
-    private boolean mIsBookmarked = false;
+    private ImageView mIVPicture;
 
     private SQLiteDatabase mDB;
 
@@ -26,34 +27,26 @@ public class HeroDetailActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_result_detail);
+        setContentView(R.layout.activity_hero_detail);
 
-        mTVSearchResultName = findViewById(R.id.tv_search_result_name);
-        mTVSearchResultDescription = findViewById(R.id.tv_search_result_description);
-        mIVSearchResultBookmark = findViewById(R.id.iv_search_result_bookmark);
+        mTVSearchResultName = findViewById(R.id.tv_name);
+        mTVSearchResultDescription = findViewById(R.id.tv_description);
+        mIVPicture = findViewById(R.id.iv_image);
+
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(MarvelUtils.EXTRA_SEARCH_RESULT)) {
             mSearchResult = (MarvelUtils.SearchResult) intent.getSerializableExtra(MarvelUtils.EXTRA_SEARCH_RESULT);
             mTVSearchResultName.setText(mSearchResult.name);
             mTVSearchResultDescription.setText(mSearchResult.description);
+            Glide.with(mIVPicture.getContext())
+                    .load(mSearchResult.imageURL)
+                    .into(mIVPicture);
         }
 
         /*MarvelUtils dbHelper = new GitHubSearchDBHelper(this);
         mDB = dbHelper.getWritableDatabase();*/
 
-        mIVSearchResultBookmark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mIsBookmarked = !mIsBookmarked;
-                if (mIsBookmarked) {
-                    //addSearchResultToDB();
-                    mIVSearchResultBookmark.setImageResource(R.drawable.ic_bookmark_black);
-                } else {
-                    mIVSearchResultBookmark.setImageResource(R.drawable.ic_bookmark_border_black);
-                }
-            }
-        });
     }
 
     @Override

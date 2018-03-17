@@ -60,7 +60,7 @@ public class MarvelUtils {
                 result.description = resultItem.getString("description");
                 JSONObject thumbnail = resultItem.getJSONObject("thumbnail");
                 result.imageURL = thumbnail.getString("path");
-                result.imageURL = result.imageURL + "/portrait_small." + thumbnail.getString("extension");
+                result.imageURL = result.imageURL + "/standard_amazing." + thumbnail.getString("extension");
                 searchResultsList.add(result);
             }
             return searchResultsList;
