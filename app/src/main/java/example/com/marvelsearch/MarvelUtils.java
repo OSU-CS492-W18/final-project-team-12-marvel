@@ -17,7 +17,7 @@ public class MarvelUtils {
     public static final String EXTRA_SEARCH_RESULT = "MarvelUtils.SearchResult";
 
     final static String MARVEL_SEARCH_BASE_URL = "https://gateway.marvel.com:443/v1/public/characters";
-    final static String MARVEL_SEARCH_CHAR_PARAM = "name";
+    final static String MARVEL_SEARCH_CHAR_PARAM = "nameStartsWith";
     final static String MARVEL_SEARCH_API_PARAM = "apikey";
     final static String MARVEL_SEARCH_HASH_PARAM = "hash";
     final static String MARVEL_SEARCH_TS_PARAM = "ts";
@@ -39,6 +39,7 @@ public class MarvelUtils {
         Uri.Builder builder = Uri.parse(MARVEL_SEARCH_BASE_URL).buildUpon();
 
         builder.appendQueryParameter(MARVEL_SEARCH_CHAR_PARAM, character_name);
+        builder.appendQueryParameter("limit","100");
         builder.appendQueryParameter(MARVEL_SEARCH_TS_PARAM, String.valueOf(ts));
         builder.appendQueryParameter(MARVEL_SEARCH_API_PARAM, PUBLIC_API_KEY);
         builder.appendQueryParameter(MARVEL_SEARCH_HASH_PARAM, hash);
