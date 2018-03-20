@@ -37,7 +37,8 @@ public class HeroDetailActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(MarvelUtils.EXTRA_SEARCH_RESULT)) {
             mSearchResult = (MarvelUtils.SearchResult) intent.getSerializableExtra(MarvelUtils.EXTRA_SEARCH_RESULT);
             mTVSearchResultName.setText(mSearchResult.name);
-            mTVSearchResultDescription.setText(mSearchResult.description);
+            String description_text = "\n\t" + mSearchResult.description;
+            mTVSearchResultDescription.setText(description_text);
             Glide.with(mIVPicture.getContext())
                     .load(mSearchResult.imageURL)
                     .into(mIVPicture);
@@ -64,8 +65,8 @@ public class HeroDetailActivity extends AppCompatActivity {
 
     public void shareRepo() {
         if (mSearchResult != null) {
-            String shareText = getString(R.string.share_text_prefix) + ": " +
-                    mSearchResult.name + ", " + mSearchResult.description;
+            String shareText = getString(R.string.share_text_prefix) + ":\n" +
+                    mSearchResult.name + ",\n   " + mSearchResult.description;
 
             ShareCompat.IntentBuilder.from(this)
                     .setChooserTitle(R.string.share_chooser_title)

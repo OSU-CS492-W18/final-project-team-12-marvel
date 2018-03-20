@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements MarvelSearchAdapt
     @Override
     public void onSavedSearchItemClick(String query) {
         doMarvelSearch(query);
+        mSearchBoxET.setHint(query);
         mDrawerLayout.closeDrawers();
         mSearchBoxET.setText("");
     }
